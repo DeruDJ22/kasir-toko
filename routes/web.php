@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\BarangController;
+use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\BarangController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('kategori', KategoriController::class)->except(['show']);
     Route::resource('barang', BarangController::class)->except(['show']);
+    Route::resource('karyawan', KaryawanController::class)->except(['show']);
 });
 
 Route::middleware(['auth', 'role:kasir'])->group(function () {
