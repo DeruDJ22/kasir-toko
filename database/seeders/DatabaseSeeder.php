@@ -2,24 +2,39 @@
 
 namespace Database\Seeders;
 
+use App\Models\Kategori;
+use App\Models\Barang;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        User::firstOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Admin',
+                'password' => 'password',
+                'nip' => '1000000001',
+                'role' => 'admin',
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        User::firstOrCreate(
+            ['email' => 'kasir@example.com'],
+            [
+                'name' => 'Kasir',
+                'password' => 'password',
+                'nip' => '1000000002',
+                'role' => 'kasir',
+            ]
+        );
+
+        $kategori = Kategori::factory()->count(5)->create();
+
+        Barang::factory()->count(10)->create([
+            'kategori_id' => fn () => $kategori->random()->id,
         ]);
     }
 }
