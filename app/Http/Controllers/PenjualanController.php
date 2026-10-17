@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Penjualan;
-use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 
 class PenjualanController extends Controller
@@ -14,8 +14,8 @@ class PenjualanController extends Controller
         $range = $this->resolveRange($request);
         $user = $request->user();
 
-        $start = \Illuminate\Support\Carbon::parse($range['start'])->startOfDay();
-        $end = \Illuminate\Support\Carbon::parse($range['end'])->endOfDay();
+        $start = Carbon::parse($range['start'])->startOfDay();
+        $end = Carbon::parse($range['end'])->endOfDay();
 
         $penjualans = Penjualan::query()
             ->with('kasir')
@@ -60,23 +60,19 @@ class PenjualanController extends Controller
 
         return match ($preset) {
             'hari_ini' => [
-                'label' => 'Hari ini',
                 'start' => $today->toDateString(),
                 'end' => $today->copy()->endOfDay()->toDateString(),
             ],
             'kemarin' => [
-                'label' => 'Kemarin',
                 'start' => $today->copy()->subDay()->toDateString(),
                 'end' => $today->copy()->subDay()->endOfDay()->toDateString(),
             ],
             'bulan_lalu' => [
-                'label' => 'Bulan lalu',
                 'start' => $today->copy()->subMonthNoOverflow()->startOfMonth()->toDateString(),
                 'end' => $today->copy()->subMonthNoOverflow()->endOfMonth()->toDateString(),
             ],
             'custom' => $this->customRange($request, $today),
             default => [
-                'label' => 'Bulan ini',
                 'start' => $today->copy()->startOfMonth()->toDateString(),
                 'end' => $today->copy()->endOfMonth()->toDateString(),
             ],
@@ -98,7 +94,6 @@ class PenjualanController extends Controller
         }
 
         return [
-            'label' => 'Custom',
             'start' => $start,
             'end' => $end,
         ];
