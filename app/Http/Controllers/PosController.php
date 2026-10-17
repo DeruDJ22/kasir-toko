@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\BuatPenjualan;
 use App\Http\Requests\CheckoutRequest;
 use App\Models\Barang;
+use App\Models\Penjualan;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -27,11 +28,26 @@ class PosController extends Controller
         return response()->json([
             'data' => [
                 'id' => $penjualan->id,
+                'receipt_url' => route('pos.receipt', ['penjualan' => $penjualan, 'print' => 1]),
                 'total' => $penjualan->total,
                 'bayar' => $penjualan->bayar,
                 'kembalian' => $penjualan->kembalian,
             ],
         ], 201);
+    }
+
+    public function receipt(Request $request, Penjualan $penjualan): View
+    {
+        $user = $request->user();
+
+        abort_unless($user->role === 'admin' || $penjualan->kasir_id === $user->id, 403);
+
+        $penjualan->loadMissing(['kasir', 'details.barang']);
+
+        return view('pos.receipt', [
+            'penjualan' => $penjualan,
+            'autoPrint' => $request->boolean('print'),
+        ]);
     }
 
     public function search(Request $request): JsonResponse

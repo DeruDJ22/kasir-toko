@@ -15,6 +15,10 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    'store_name' => env('STORE_NAME', env('APP_NAME', 'Toko')),
+
+    'store_address' => env('STORE_ADDRESS', ''),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

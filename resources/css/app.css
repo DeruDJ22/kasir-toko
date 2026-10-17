@@ -5,3 +5,106 @@
 [x-cloak] {
     display: none;
 }
+
+@layer components {
+    .receipt-body {
+        @apply bg-gray-100 text-gray-900;
+    }
+
+    .receipt {
+        @apply mx-auto my-4 max-w-xs bg-white p-4 font-mono text-xs leading-tight shadow-sm;
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    .receipt-header {
+        @apply mb-3 text-center;
+    }
+
+    .receipt-title {
+        @apply text-sm font-bold uppercase;
+    }
+
+    .receipt-address {
+        @apply mt-1 whitespace-pre-line text-[10px] leading-snug text-gray-700;
+    }
+
+    .receipt-meta {
+        @apply mb-3 space-y-0.5;
+    }
+
+    .receipt-meta-row {
+        @apply flex justify-between gap-2;
+    }
+
+    .receipt-meta-row dt {
+        @apply text-gray-600;
+    }
+
+    .receipt-meta-row dd {
+        @apply text-right text-gray-900;
+    }
+
+    .receipt-items {
+        @apply divide-y divide-dotted divide-gray-300 border-y border-dashed border-gray-400 py-1;
+    }
+
+    .receipt-item {
+        @apply py-1;
+    }
+
+    .receipt-item-name {
+        @apply break-words;
+    }
+
+    .receipt-item-line {
+        @apply flex justify-between gap-2 text-gray-700;
+    }
+
+    .receipt-totals {
+        @apply mt-2 space-y-0.5;
+    }
+
+    .receipt-total-row {
+        @apply flex justify-between gap-2;
+    }
+
+    .receipt-total-change {
+        @apply border-t border-dashed border-gray-400 pt-1 font-bold;
+    }
+
+    .receipt-footer {
+        @apply mt-3 border-t border-dashed border-gray-400 pt-2 text-center text-[10px] text-gray-700;
+    }
+
+    .receipt-actions {
+        @apply mt-4 flex flex-col gap-2;
+    }
+}
+
+@media print {
+    @page {
+        margin: 4mm;
+    }
+
+    .receipt-body {
+        background: #fff;
+    }
+
+    .receipt {
+        margin: 0;
+        max-width: none;
+        box-shadow: none;
+        padding: 0;
+    }
+
+    .receipt-actions {
+        display: none !important;
+    }
+
+    .receipt-address,
+    .receipt-meta-row dt,
+    .receipt-item-line,
+    .receipt-footer {
+        color: #000;
+    }
+}

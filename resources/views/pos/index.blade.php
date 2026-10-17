@@ -138,7 +138,11 @@
                         </div>
                     </dl>
 
-                    <button type="button" @click="startNew()" class="mt-4 w-full rounded-md border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    <a :href="paid ? paid.receipt_url : '#'" target="_blank" rel="noopener" class="mt-4 block w-full rounded-md bg-indigo-600 px-4 py-2.5 text-center text-sm font-medium text-white hover:bg-indigo-700">
+                        Cetak struk
+                    </a>
+
+                    <button type="button" @click="startNew()" class="mt-2 w-full rounded-md border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
                         Transaksi baru
                     </button>
                 </div>

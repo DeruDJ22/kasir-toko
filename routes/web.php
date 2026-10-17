@@ -33,4 +33,8 @@ Route::middleware(['auth', 'role:kasir'])->group(function () {
     Route::post('/pos/bayar', [PosController::class, 'pay'])->name('pos.pay');
 });
 
+Route::middleware('auth')->group(function () {
+    Route::get('/pos/struk/{penjualan}', [PosController::class, 'receipt'])->name('pos.receipt');
+});
+
 require __DIR__.'/auth.php';
