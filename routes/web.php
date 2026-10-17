@@ -3,6 +3,7 @@
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,9 +28,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:kasir'])->group(function () {
-    Route::get('/pos', function () {
-        return view('pos.index');
-    })->name('pos.index');
+    Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
+    Route::get('/pos/cari', [PosController::class, 'search'])->name('pos.search');
 });
 
 require __DIR__.'/auth.php';
