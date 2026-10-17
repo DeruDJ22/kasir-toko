@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\BuatPenjualan;
+use App\Http\Requests\CheckoutRequest;
 use App\Models\Barang;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,6 +14,24 @@ class PosController extends Controller
     public function index(): View
     {
         return view('pos.index');
+    }
+
+    public function pay(CheckoutRequest $request, BuatPenjualan $buatPenjualan): JsonResponse
+    {
+        $penjualan = $buatPenjualan->handle(
+            $request->user(),
+            $request->validated('items'),
+            (int) $request->validated('bayar'),
+        );
+
+        return response()->json([
+            'data' => [
+                'id' => $penjualan->id,
+                'total' => $penjualan->total,
+                'bayar' => $penjualan->bayar,
+                'kembalian' => $penjualan->kembalian,
+            ],
+        ], 201);
     }
 
     public function search(Request $request): JsonResponse

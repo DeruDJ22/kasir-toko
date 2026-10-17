@@ -30,6 +30,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:kasir'])->group(function () {
     Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
     Route::get('/pos/cari', [PosController::class, 'search'])->name('pos.search');
+    Route::post('/pos/bayar', [PosController::class, 'pay'])->name('pos.pay');
 });
 
 require __DIR__.'/auth.php';

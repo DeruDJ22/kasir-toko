@@ -76,35 +76,72 @@
             </div>
 
             <div class="h-fit rounded-lg border border-gray-200 bg-white p-4">
-                <h2 class="text-sm font-semibold text-gray-800">Ringkasan</h2>
+                <div x-show="!paid">
+                    <h2 class="text-sm font-semibold text-gray-800">Ringkasan</h2>
 
-                <dl class="mt-3 space-y-2 text-sm">
-                    <div class="flex justify-between">
-                        <dt class="text-gray-500">Total</dt>
-                        <dd class="font-semibold text-gray-800" x-text="rp(total)"></dd>
+                    <dl class="mt-3 space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <dt class="text-gray-500">Total</dt>
+                            <dd class="font-semibold text-gray-800" x-text="rp(total)"></dd>
+                        </div>
+                    </dl>
+
+                    <div class="mt-4">
+                        <label for="bayar" class="block text-sm font-medium text-gray-700">Uang diterima</label>
+                        <input
+                            id="bayar"
+                            type="number"
+                            min="0"
+                            x-model.number="bayar"
+                            placeholder="0"
+                            class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                        >
                     </div>
-                </dl>
 
-                <div class="mt-4">
-                    <label for="bayar" class="block text-sm font-medium text-gray-700">Uang diterima</label>
-                    <input
-                        id="bayar"
-                        type="number"
-                        min="0"
-                        x-model.number="bayar"
-                        placeholder="0"
-                        class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                    <div class="mt-3 flex justify-between text-sm">
+                        <span class="text-gray-500">Kembalian</span>
+                        <span class="font-semibold" :class="kembalian < 0 ? 'text-red-600' : 'text-gray-800'" x-text="rp(Math.max(kembalian, 0))"></span>
+                    </div>
+
+                    <p x-show="kembalian < 0" x-cloak class="mt-2 text-xs text-red-600">
+                        Uang diterima kurang dari total belanja.
+                    </p>
+
+                    <button
+                        type="button"
+                        @click="pay()"
+                        :disabled="!cart.length || submitting"
+                        class="mt-4 w-full rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-gray-300"
                     >
+                        <span x-show="!submitting">Bayar</span>
+                        <span x-show="submitting" x-cloak>Memproses...</span>
+                    </button>
+
+                    <p x-show="error" x-cloak class="mt-3 text-sm text-red-600" x-text="error"></p>
                 </div>
 
-                <div class="mt-3 flex justify-between text-sm">
-                    <span class="text-gray-500">Kembalian</span>
-                    <span class="font-semibold" :class="kembalian < 0 ? 'text-red-600' : 'text-gray-800'" x-text="rp(Math.max(kembalian, 0))"></span>
-                </div>
+                <div x-show="paid" x-cloak>
+                    <h2 class="text-sm font-semibold text-green-800">Pembayaran berhasil</h2>
 
-                <p x-show="kembalian < 0" x-cloak class="mt-2 text-xs text-red-600">
-                    Uang diterima kurang dari total belanja.
-                </p>
+                    <dl class="mt-3 space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <dt class="text-gray-500">Total</dt>
+                            <dd class="font-semibold text-gray-800" x-text="rp(paid ? paid.total : 0)"></dd>
+                        </div>
+                        <div class="flex justify-between">
+                            <dt class="text-gray-500">Diterima</dt>
+                            <dd class="text-gray-800" x-text="rp(paid ? paid.bayar : 0)"></dd>
+                        </div>
+                        <div class="flex justify-between">
+                            <dt class="text-gray-500">Kembalian</dt>
+                            <dd class="font-semibold text-gray-800" x-text="rp(paid ? paid.kembalian : 0)"></dd>
+                        </div>
+                    </dl>
+
+                    <button type="button" @click="startNew()" class="mt-4 w-full rounded-md border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        Transaksi baru
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -118,6 +155,9 @@
                 loading: false,
                 cart: [],
                 bayar: null,
+                submitting: false,
+                error: '',
+                paid: null,
 
                 rp(value) {
                     return 'Rp ' + new Intl.NumberFormat('id-ID').format(value || 0);
@@ -183,6 +223,60 @@
 
                 get kembalian() {
                     return (this.bayar || 0) - this.total;
+                },
+
+                async pay() {
+                    this.error = '';
+
+                    if (!this.cart.length) {
+                        this.error = 'Keranjang masih kosong.';
+                        return;
+                    }
+
+                    if (this.kembalian < 0) {
+                        this.error = 'Uang diterima kurang dari total belanja.';
+                        return;
+                    }
+
+                    this.submitting = true;
+                    try {
+                        const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                        const response = await fetch('{{ route('pos.pay') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': token || '',
+                            },
+                            body: JSON.stringify({
+                                items: this.cart.map((entry) => ({ id: entry.id, qty: entry.qty })),
+                                bayar: this.bayar,
+                            }),
+                        });
+
+                        const payload = await response.json();
+
+                        if (!response.ok) {
+                            const firstError = payload.errors ? Object.values(payload.errors)[0]?.[0] : null;
+                            this.error = firstError || payload.message || 'Pembayaran gagal.';
+                            return;
+                        }
+
+                        this.paid = payload.data;
+                        this.cart = [];
+                        this.bayar = null;
+                    } catch (e) {
+                        this.error = 'Gagal memproses pembayaran, coba lagi.';
+                    } finally {
+                        this.submitting = false;
+                    }
+                },
+
+                startNew() {
+                    this.paid = null;
+                    this.error = '';
+                    this.cart = [];
+                    this.bayar = null;
                 },
             };
         }
