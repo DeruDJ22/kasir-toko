@@ -103,7 +103,11 @@
                         <span class="font-semibold" :class="kembalian < 0 ? 'text-red-600' : 'text-gray-800'" x-text="rp(Math.max(kembalian, 0))"></span>
                     </div>
 
-                    <p x-show="kembalian < 0" x-cloak class="mt-2 text-xs text-red-600">
+                    <p
+                        x-show="bayar !== null && bayar !== '' && kembalian < 0"
+                        x-cloak
+                        class="mt-2 text-xs text-red-600"
+                    >
                         Uang diterima kurang dari total belanja.
                     </p>
 
