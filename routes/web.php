@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProfileController;
@@ -27,6 +28,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('kategori', KategoriController::class)->except(['show']);
     Route::resource('barang', BarangController::class)->except(['show']);
     Route::resource('karyawan', KaryawanController::class)->except(['show']);
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
 });
 
 Route::middleware(['auth', 'role:kasir'])->group(function () {
