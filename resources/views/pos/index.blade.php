@@ -9,63 +9,63 @@
                         @input.debounce.250ms="search()"
                         @click.outside="showResults = false"
                         placeholder="Cari barang..."
-                        class="w-full rounded-md border border-gray-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                        class="w-full rounded-md border border-gray-300 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                     >
 
-                    <div x-show="showResults && results.length" x-cloak class="absolute z-10 mt-1 w-full overflow-hidden rounded-md border border-gray-200 bg-white shadow-lg">
+                    <div x-show="showResults && results.length" x-cloak class="absolute z-10 mt-1 w-full overflow-hidden rounded-md border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-lg">
                         <template x-for="item in results" :key="item.id">
-                            <button type="button" @click="addToCart(item)" class="flex w-full items-center justify-between px-3 py-2 text-left text-sm hover:bg-gray-50">
+                            <button type="button" @click="addToCart(item)" class="flex w-full items-center justify-between px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-slate-700">
                                 <span>
-                                    <span class="font-medium text-gray-800" x-text="item.nama"></span>
-                                    <span class="ml-2 text-xs text-gray-500" x-text="item.kategori || '-'"></span>
+                                    <span class="font-medium text-gray-800 dark:text-slate-100" x-text="item.nama"></span>
+                                    <span class="ml-2 text-xs text-gray-500 dark:text-slate-400" x-text="item.kategori || '-'"></span>
                                 </span>
                                 <span class="text-right">
-                                    <span class="text-gray-600" x-text="rp(item.harga)"></span>
-                                    <span class="ml-3 text-xs text-gray-400" x-text="'stok ' + item.stok"></span>
+                                    <span class="text-gray-600 dark:text-slate-300" x-text="rp(item.harga)"></span>
+                                    <span class="ml-3 text-xs text-gray-400 dark:text-slate-600" x-text="'stok ' + item.stok"></span>
                                 </span>
                             </button>
                         </template>
                     </div>
 
-                    <p x-show="showResults && query.length >= 2 && !results.length && !loading" x-cloak class="mt-2 text-sm text-gray-500">
+                    <p x-show="showResults && query.length >= 2 && !results.length && !loading" x-cloak class="mt-2 text-sm text-gray-500 dark:text-slate-400">
                         Barang tidak ditemukan.
                     </p>
                 </div>
 
-                <div class="overflow-hidden rounded-lg border border-gray-200 bg-white">
-                    <table class="min-w-full divide-y divide-gray-200 text-sm">
-                        <thead class="bg-gray-50">
+                <div class="overflow-hidden rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700 text-sm">
+                        <thead class="bg-gray-50 dark:bg-slate-700/50">
                             <tr>
-                                <th scope="col" class="px-4 py-3 text-left font-medium text-gray-600">Barang</th>
-                                <th scope="col" class="px-4 py-3 text-right font-medium text-gray-600">Harga</th>
-                                <th scope="col" class="px-4 py-3 text-center font-medium text-gray-600">Qty</th>
-                                <th scope="col" class="px-4 py-3 text-right font-medium text-gray-600">Subtotal</th>
-                                <th scope="col" class="px-4 py-3 text-right font-medium text-gray-600"></th>
+                                <th scope="col" class="px-4 py-3 text-left font-medium text-gray-600 dark:text-slate-300">Barang</th>
+                                <th scope="col" class="px-4 py-3 text-right font-medium text-gray-600 dark:text-slate-300">Harga</th>
+                                <th scope="col" class="px-4 py-3 text-center font-medium text-gray-600 dark:text-slate-300">Qty</th>
+                                <th scope="col" class="px-4 py-3 text-right font-medium text-gray-600 dark:text-slate-300">Subtotal</th>
+                                <th scope="col" class="px-4 py-3 text-right font-medium text-gray-600 dark:text-slate-300"></th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200">
+                        <tbody class="divide-y divide-gray-200 dark:divide-slate-700">
                             <template x-if="cart.length">
                                 <template x-for="line in cart" :key="line.id">
                                     <tr>
-                                        <td class="px-4 py-3 font-medium text-gray-800" x-text="line.nama"></td>
-                                        <td class="px-4 py-3 text-right text-gray-600" x-text="rp(line.harga)"></td>
+                                        <td class="px-4 py-3 font-medium text-gray-800 dark:text-slate-100" x-text="line.nama"></td>
+                                        <td class="px-4 py-3 text-right text-gray-600 dark:text-slate-300" x-text="rp(line.harga)"></td>
                                         <td class="px-4 py-3">
                                             <div class="flex items-center justify-center gap-2">
-                                                <button type="button" @click="decreaseQty(line)" class="h-7 w-7 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50">-</button>
-                                                <span class="w-6 text-center text-gray-800" x-text="line.qty"></span>
-                                                <button type="button" @click="increaseQty(line)" class="h-7 w-7 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50">+</button>
+                                                <button type="button" @click="decreaseQty(line)" class="h-7 w-7 rounded-md border border-gray-300 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700">-</button>
+                                                <span class="w-6 text-center text-gray-800 dark:text-slate-100" x-text="line.qty"></span>
+                                                <button type="button" @click="increaseQty(line)" class="h-7 w-7 rounded-md border border-gray-300 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700">+</button>
                                             </div>
                                         </td>
-                                        <td class="px-4 py-3 text-right text-gray-800" x-text="rp(line.harga * line.qty)"></td>
+                                        <td class="px-4 py-3 text-right text-gray-800 dark:text-slate-100" x-text="rp(line.harga * line.qty)"></td>
                                         <td class="px-4 py-3 text-right">
-                                            <button type="button" @click="removeLine(line)" class="font-medium text-red-600 hover:text-red-800">Hapus</button>
+                                            <button type="button" @click="removeLine(line)" class="font-medium text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300">Hapus</button>
                                         </td>
                                     </tr>
                                 </template>
                             </template>
                             <template x-if="!cart.length">
                                 <tr>
-                                    <td colspan="5" class="px-4 py-10 text-center text-sm text-gray-500">
+                                    <td colspan="5" class="px-4 py-10 text-center text-sm text-gray-500 dark:text-slate-400">
                                         Keranjang kosong. Cari barang untuk mulai berjualan.
                                     </td>
                                 </tr>
@@ -75,38 +75,38 @@
                 </div>
             </div>
 
-            <div class="h-fit rounded-lg border border-gray-200 bg-white p-4">
+            <div class="h-fit rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4">
                 <div x-show="!paid">
-                    <h2 class="text-sm font-semibold text-gray-800">Ringkasan</h2>
+                    <h2 class="text-sm font-semibold text-gray-800 dark:text-slate-100">Ringkasan</h2>
 
                     <dl class="mt-3 space-y-2 text-sm">
                         <div class="flex justify-between">
-                            <dt class="text-gray-500">Total</dt>
-                            <dd class="font-semibold text-gray-800" x-text="rp(total)"></dd>
+                            <dt class="text-gray-500 dark:text-slate-400">Total</dt>
+                            <dd class="font-semibold text-gray-800 dark:text-slate-100" x-text="rp(total)"></dd>
                         </div>
                     </dl>
 
                     <div class="mt-4">
-                        <label for="bayar" class="block text-sm font-medium text-gray-700">Uang diterima</label>
+                        <label for="bayar" class="block text-sm font-medium text-gray-700 dark:text-slate-300">Uang diterima</label>
                         <input
                             id="bayar"
                             type="number"
                             min="0"
                             x-model.number="bayar"
                             placeholder="0"
-                            class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                            class="mt-1 w-full rounded-md border border-gray-300 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                         >
                     </div>
 
                     <div class="mt-3 flex justify-between text-sm">
-                        <span class="text-gray-500">Kembalian</span>
-                        <span class="font-semibold" :class="kembalian < 0 ? 'text-red-600' : 'text-gray-800'" x-text="rp(Math.max(kembalian, 0))"></span>
+                        <span class="text-gray-500 dark:text-slate-400">Kembalian</span>
+                        <span class="font-semibold" :class="kembalian < 0 ? 'text-red-600 dark:text-red-400' : 'text-gray-800 dark:text-slate-100'" x-text="rp(Math.max(kembalian, 0))"></span>
                     </div>
 
                     <p
                         x-show="bayar !== null && bayar !== '' && kembalian < 0"
                         x-cloak
-                        class="mt-2 text-xs text-red-600"
+                        class="mt-2 text-xs text-red-600 dark:text-red-400"
                     >
                         Uang diterima kurang dari total belanja.
                     </p>
@@ -115,38 +115,38 @@
                         type="button"
                         @click="pay()"
                         :disabled="!cart.length || submitting"
-                        class="mt-4 w-full rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-gray-300"
+                        class="mt-4 w-full rounded-md bg-indigo-600 dark:bg-indigo-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 dark:hover:bg-indigo-600 disabled:cursor-not-allowed disabled:bg-gray-300 dark:disabled:bg-slate-600"
                     >
                         <span x-show="!submitting">Bayar</span>
                         <span x-show="submitting" x-cloak>Memproses...</span>
                     </button>
 
-                    <p x-show="error" x-cloak class="mt-3 text-sm text-red-600" x-text="error"></p>
+                    <p x-show="error" x-cloak class="mt-3 text-sm text-red-600 dark:text-red-400" x-text="error"></p>
                 </div>
 
                 <div x-show="paid" x-cloak>
-                    <h2 class="text-sm font-semibold text-green-800">Pembayaran berhasil</h2>
+                    <h2 class="text-sm font-semibold text-green-800 dark:text-green-400">Pembayaran berhasil</h2>
 
                     <dl class="mt-3 space-y-2 text-sm">
                         <div class="flex justify-between">
-                            <dt class="text-gray-500">Total</dt>
-                            <dd class="font-semibold text-gray-800" x-text="rp(paid ? paid.total : 0)"></dd>
+                            <dt class="text-gray-500 dark:text-slate-400">Total</dt>
+                            <dd class="font-semibold text-gray-800 dark:text-slate-100" x-text="rp(paid ? paid.total : 0)"></dd>
                         </div>
                         <div class="flex justify-between">
-                            <dt class="text-gray-500">Diterima</dt>
-                            <dd class="text-gray-800" x-text="rp(paid ? paid.bayar : 0)"></dd>
+                            <dt class="text-gray-500 dark:text-slate-400">Diterima</dt>
+                            <dd class="text-gray-800 dark:text-slate-100" x-text="rp(paid ? paid.bayar : 0)"></dd>
                         </div>
                         <div class="flex justify-between">
-                            <dt class="text-gray-500">Kembalian</dt>
-                            <dd class="font-semibold text-gray-800" x-text="rp(paid ? paid.kembalian : 0)"></dd>
+                            <dt class="text-gray-500 dark:text-slate-400">Kembalian</dt>
+                            <dd class="font-semibold text-gray-800 dark:text-slate-100" x-text="rp(paid ? paid.kembalian : 0)"></dd>
                         </div>
                     </dl>
 
-                    <a :href="paid ? paid.receipt_url : '#'" target="_blank" rel="noopener" class="mt-4 block w-full rounded-md bg-indigo-600 px-4 py-2.5 text-center text-sm font-medium text-white hover:bg-indigo-700">
+                    <a :href="paid ? paid.receipt_url : '#'" target="_blank" rel="noopener" class="mt-4 block w-full rounded-md bg-indigo-600 dark:bg-indigo-500 px-4 py-2.5 text-center text-sm font-medium text-white hover:bg-indigo-700 dark:hover:bg-indigo-600">
                         Cetak struk
                     </a>
 
-                    <button type="button" @click="startNew()" class="mt-2 w-full rounded-md border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    <button type="button" @click="startNew()" class="mt-2 w-full rounded-md border border-gray-300 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700">
                         Transaksi baru
                     </button>
                 </div>
